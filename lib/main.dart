@@ -29,6 +29,7 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
+  void checkAnswer(bool userPickedAnswer) {
     if (quizBrain.isFinished()) {
       Alert(
         context: context,
@@ -64,8 +65,6 @@ class _QuizPageState extends State<QuizPage> {
 
       return;
     }
-
-  void checkAnswer(bool userPickedAnswer) {
 
     bool correctAnswer = quizBrain.getAnswer();
 
