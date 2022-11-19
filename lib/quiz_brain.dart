@@ -77,6 +77,14 @@ class QuizBrain {
   bool getAnswer() {
     return _quizBank[_quizNumber].answer;
   }
+
+  bool isFinished() {
+    return (_quizBank.length - 1) == _quizNumber;
+  }
+
+  void reset() {
+    _quizNumber = 0;
+  }
 }
 
 /*

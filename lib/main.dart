@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -28,22 +29,66 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
-  List<Quiz> quizBank = [
-    Quiz(
-      question: "You can lead a cow down stairs but not up stairs.",
-      answer: false,
-    ),
-    Quiz(
-      question: "Approximately one quarter of human bones are in the feet.",
-      answer: true,
-    ),
-    Quiz(
-      question: "A slug's blood is green.",
-      answer: true,
-    ),
-  ];
+    if (quizBrain.isFinished()) {
+      Alert(
+        context: context,
+        title: "Finished!",
+        desc: "You've reach the end of the quiz.",
+        buttons: [
+          DialogButton(
+            onPressed: (() => Navigator.pop(context)),
+            child: const Text(
+              "OK",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          DialogButton(
+            child: const Text(
+              "RESET",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () => {
+              setState(() {
+                quizBrain.reset();
+                scoreKeeper.clear();
+              }),
+              Navigator.pop(context),
+            },
+          )
+        ],
+      ).show();
 
-  int questionNumber = 0;
+      return;
+    }
+
+  void checkAnswer(bool userPickedAnswer) {
+
+    bool correctAnswer = quizBrain.getAnswer();
+
+    setState(() {
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        scoreKeeper.add(
+          const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+
+      quizBrain.nextQuiz();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,27 +119,7 @@ class _QuizPageState extends State<QuizPage> {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: TextButton(
-                  onPressed: () => {
-                    setState(() {
-                      if (quizBrain.getAnswer()) {
-                        scoreKeeper.add(
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          ),
-                        );
-                      } else {
-                        scoreKeeper.add(
-                          const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
-                        );
-                      }
-
-                      quizBrain.nextQuiz();
-                    }),
-                  },
+                  onPressed: () => checkAnswer(true),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.green,
@@ -107,27 +132,7 @@ class _QuizPageState extends State<QuizPage> {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: TextButton(
-                  onPressed: () => {
-                    setState(() {
-                      if (quizBrain.getAnswer()) {
-                        scoreKeeper.add(
-                          const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
-                        );
-                      } else {
-                        scoreKeeper.add(
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          ),
-                        );
-                      }
-
-                      quizBrain.nextQuiz();
-                    }),
-                  },
+                  onPressed: () => checkAnswer(false),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.red,
