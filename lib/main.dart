@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'quiz.dart';
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() {
   runApp(const Quizzler());
@@ -58,7 +60,7 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(15.0),
                 child: Center(
                   child: Text(
-                    quizBank[questionNumber].question,
+                    quizBrain.getQuestion(),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 20.0,
@@ -74,7 +76,7 @@ class _QuizPageState extends State<QuizPage> {
                 child: TextButton(
                   onPressed: () => {
                     setState(() {
-                      if (quizBank[questionNumber].answer) {
+                      if (quizBrain.getAnswer()) {
                         scoreKeeper.add(
                           const Icon(
                             Icons.check,
@@ -90,7 +92,7 @@ class _QuizPageState extends State<QuizPage> {
                         );
                       }
 
-                      questionNumber = (questionNumber + 1) % quizBank.length;
+                      quizBrain.nextQuiz();
                     }),
                   },
                   style: TextButton.styleFrom(
@@ -107,7 +109,7 @@ class _QuizPageState extends State<QuizPage> {
                 child: TextButton(
                   onPressed: () => {
                     setState(() {
-                      if (quizBank[questionNumber].answer) {
+                      if (quizBrain.getAnswer()) {
                         scoreKeeper.add(
                           const Icon(
                             Icons.close,
@@ -123,7 +125,7 @@ class _QuizPageState extends State<QuizPage> {
                         );
                       }
 
-                      questionNumber = (questionNumber + 1) % quizBank.length;
+                      quizBrain.nextQuiz();
                     }),
                   },
                   style: TextButton.styleFrom(
